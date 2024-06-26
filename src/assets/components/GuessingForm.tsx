@@ -21,15 +21,14 @@ function GuessingForm({ country, fetchRandomCountry }: GuessingFormProps) {
   return (
     <div className="flex flex-col items-center">
       <div className="flex flex-col">
-        <div className="flex flex-col">
-          <img src={country.flags.png} alt={`${country.name.common} flag`} />
-          <input
-            type="text"
-            placeholder="Guess the country"
-            value={guess}
-            onChange={(e) => setGuess(e.target.value)}
-          />
-        </div>
+        <img src={country.flags.png} alt={`${country.name.common} flag`} />
+        <input
+          className="d-block"
+          type="text"
+          placeholder="Guess the country"
+          value={guess}
+          onChange={(e) => setGuess(e.target.value)}
+        />
       </div>
       <button onClick={checkGuess}>Check</button>
       <button onClick={fetchRandomCountry}>Randomize Again</button>

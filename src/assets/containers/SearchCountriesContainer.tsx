@@ -4,6 +4,7 @@ import CountryList from '../components/CountryList';
 import { Country } from '../types/Country';
 import SearchTitle from '../components/SearchTitle';
 import GuessingForm from '../components/GuessingForm';
+import ModeSelector from '../components/ModeSelector';
 
 function SearchCountriesContainer() {
   const [filter, setFilter] = useState('');
@@ -61,6 +62,8 @@ function SearchCountriesContainer() {
       fetch('https://restcountries.com/v3.1/all')
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
+          
           const randomIndex = Math.floor(Math.random() * data.length);
           setRandomCountry(data[randomIndex]);
         })
@@ -92,26 +95,7 @@ function SearchCountriesContainer() {
   return (
     <div className="SearchCountriesContainer">
       <SearchTitle />
-      <div>
-        <input
-          type="radio"
-          id="search"
-          name="mode"
-          value="search"
-          checked={mode === 'search'}
-          onChange={() => setMode('search')}
-        />
-        <label htmlFor="search">Search Mode</label>
-        <input
-          type="radio"
-          id="guess"
-          name="mode"
-          value="guess"
-          checked={mode === 'guess'}
-          onChange={() => setMode('guess')}
-        />
-        <label htmlFor="guess">Guessing Mode</label>
-      </div>
+      <ModeSelector mode={mode} setMode={setMode}/>
       {mode === 'search' ? (
         <>
           <SearchForm
