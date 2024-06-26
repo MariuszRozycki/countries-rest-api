@@ -1,3 +1,4 @@
+import { api } from '../api/api';
 import { useState, useEffect } from 'react';
 import SearchForm from '../components/SearchForm';
 import CountryList from '../components/CountryList';
@@ -14,6 +15,8 @@ function SearchCountriesContainer() {
   const [mode, setMode] = useState<'search' | 'guess'>('search');
   const [randomCountry, setRandomCountry] = useState<Country | null>(null);
 
+  
+
   useEffect(() => {
     if (mode === 'search') {
       if (filterValue === '') {
@@ -25,16 +28,16 @@ function SearchCountriesContainer() {
         let endpoint = '';
         switch (filter) {
           case 'currency':
-            endpoint = `https://restcountries.com/v3.1/currency/${filterValue}`;
+            endpoint = `${api}currency/${filterValue}`;
             break;
           case 'language':
-            endpoint = `https://restcountries.com/v3.1/lang/${filterValue}`;
+            endpoint = `${api}lang/${filterValue}`;
             break;
           case 'capital':
-            endpoint = `https://restcountries.com/v3.1/capital/${filterValue}`;
+            endpoint = `${api}capital/${filterValue}`;
             break;
           case 'name':
-            endpoint = `https://restcountries.com/v3.1/name/${filterValue}`;
+            endpoint = `${api}name/${filterValue}`;
             break;
           default:
             return;
@@ -59,7 +62,7 @@ function SearchCountriesContainer() {
         setCountries([]);
       }
     } else if (mode === 'guess') {
-      fetch('https://restcountries.com/v3.1/all')
+      fetch(`${api}all`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
