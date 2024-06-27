@@ -1,12 +1,12 @@
 import SelectFilter from './SelectFilter';
-import InputFilterValue from './InputFilterValue';
+import InputFormValue from './InputFormValue';
 import SelectSortBy from './SelectSortBy';
 
 type SearchFormProps = {
   filter: string;
   setFilter: (filter: string) => void;
-  filterValue: string;
-  setFilterValue: (value: string) => void;
+  inputValue: string;
+  setInputValue: (value: string) => void;
   sortOption: string;
   setSortOption: (option: string) => void;
 };
@@ -14,15 +14,15 @@ type SearchFormProps = {
 function SearchForm({
   filter,
   setFilter,
-  filterValue,
-  setFilterValue,
+  inputValue,
+  setInputValue,
   sortOption,
   setSortOption,
 }: SearchFormProps) {
   return (
-    <form className="space-x-4 flex items-end justify-center">
+    <form className="flex flex-col items-center gap-2 flex items-end justify-center">
       <SelectFilter filter={filter} setFilter={setFilter} />
-      <InputFilterValue filterValue={filterValue} setFilterValue={setFilterValue}/>
+      <InputFormValue inputValue={inputValue} setInputValue={setInputValue}/>
       <SelectSortBy sortOption={sortOption} setSortOption={setSortOption}/>
     </form>
   );

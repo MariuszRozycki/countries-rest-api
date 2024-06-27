@@ -5,7 +5,10 @@ type SelectFilterProps = {
 
 function SelectFilter({ filter, setFilter }: SelectFilterProps) {
   return (
-    <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+    <select 
+      className="p-1"
+      value={filter} 
+      onChange={(e) => setFilter(e.target.value)}>
       <option value="">Select filter</option>
       <option value="currency">Currency</option>
       <option value="language">Language</option>
