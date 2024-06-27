@@ -87,6 +87,8 @@ function SearchCountriesContainer() {
       const response = await fetch(`${baseUrl}all`);
       const data = await response.json();
       const randomIndex = Math.floor(Math.random() * data.length);
+      console.log(data[randomIndex]);
+      
       setRandomCountry(data[randomIndex]);
       setMessage('');
       setHint('');

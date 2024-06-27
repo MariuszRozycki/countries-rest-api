@@ -13,6 +13,8 @@ type GuessingFormProps = {
 };
 
 function GuessingForm({ country, fetchRandomCountry, hint, setHint, message, setMessage, guess, setGuess }: GuessingFormProps) {
+  console.log(message);
+  
   const [btnHintValue, setBtnHintValue] = useState('Give a hint');
 
   const checkGuess = () => {
@@ -54,7 +56,7 @@ function GuessingForm({ country, fetchRandomCountry, hint, setHint, message, set
       <button
         className="my-2"
         onClick={giveHint}>{btnHintValue}</button>
-      <p className="my-2 text-red-900 font-bold rounded-md">{hint}</p>  
+      <p className="my-2 font-bold rounded-md">{hint}</p>  
       <button onClick={fetchRandomCountry}>Randomize Again</button>
       <p className="my-2 font-bold">{message}</p>
     </div>
