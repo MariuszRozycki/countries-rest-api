@@ -8,68 +8,70 @@ import ModeSelector from '../components/ModeSelector';
 
 function SearchCountriesContainer() {
   const [filter, setFilter] = useState('');
-  const [filterValue, setFilterValue] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [countries, setCountries] = useState<Country[]>([]);
   const [sortOption, setSortOption] = useState('');
   const [mode, setMode] = useState<'search' | 'guess'>('search');
+  const [message, setMessage] = useState('');
+  const [hint, setHint] = useState('');
   const [randomCountry, setRandomCountry] = useState<Country | null>(null);
+  const [guess, setGuess] = useState('');
+
+  const baseUrl = `https://restcountries.com/v3.1/`;
+  
+  useEffect(() => {
+    if (filter === '') {
+      setInputValue('');
+    }
+  }, [filter]);
 
   useEffect(() => {
-    if (mode === 'search') {
-      if (filterValue === '') {
-        setCountries([]);
-        return;
-      }
+    const fetchCountries = async () => {
+      try {
+        const urlAll = `${baseUrl}all`;
+        const response = await fetch(urlAll);
+        const data = await response.json();
+        setCountries(data);
 
-      if (filter && filterValue) {
-        let endpoint = '';
-        switch (filter) {
-          case 'currency':
-            endpoint = `https://restcountries.com/v3.1/currency/${filterValue}`;
-            break;
-          case 'language':
-            endpoint = `https://restcountries.com/v3.1/lang/${filterValue}`;
-            break;
-          case 'capital':
-            endpoint = `https://restcountries.com/v3.1/capital/${filterValue}`;
-            break;
-          case 'name':
-            endpoint = `https://restcountries.com/v3.1/name/${filterValue}`;
-            break;
-          default:
-            return;
-        }
-
-        fetch(endpoint)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (Array.isArray(data)) {
-              setCountries(data);
-            } else {
-              setCountries([]);
-            }
-          })
-          .catch((error) => console.error('Error fetching data:', error));
-      } else {
-        setCountries([]);
-      }
-    } else if (mode === 'guess') {
-      fetch('https://restcountries.com/v3.1/all')
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          
+        if (mode === 'guess') {
           const randomIndex = Math.floor(Math.random() * data.length);
           setRandomCountry(data[randomIndex]);
-        })
-        .catch((error) => console.error('Error fetching data:', error));
-    }
-  }, [filter, filterValue, mode]);
+        }
+
+        if (mode === 'search' && filter && inputValue) {
+          let endpoint = '';
+          switch (filter) {
+            case 'currency':
+              endpoint = `${baseUrl}currency/${inputValue}`;
+              break;
+            case 'language':
+              endpoint = `${baseUrl}lang/${inputValue}`;
+              break;
+            case 'capital':
+              endpoint = `${baseUrl}capital/${inputValue}`;
+              break;
+            case 'name':
+              endpoint = `${baseUrl}name/${inputValue}`;
+              break;
+            default:
+              return;
+          }
+
+          const filteredResponse = await fetch(endpoint);
+          const filteredData = await filteredResponse.json();
+          if (Array.isArray(filteredData)) {
+            setCountries(filteredData);
+          } else {
+            setCountries([]);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchCountries();
+  }, [baseUrl, mode, filter, inputValue]);
 
   const sortedCountries = [...countries].sort((a, b) => {
     if (sortOption === 'name') {
@@ -80,36 +82,48 @@ function SearchCountriesContainer() {
     return 0;
   });
 
-  console.log(sortedCountries);
-
-  const fetchRandomCountry = () => {
-    fetch('https://restcountries.com/v3.1/all')
-      .then((response) => response.json())
-      .then((data) => {
-        const randomIndex = Math.floor(Math.random() * data.length);
-        setRandomCountry(data[randomIndex]);
-      })
-      .catch((error) => console.error('Error fetching data:', error));
+  const fetchRandomCountry = async () => {
+    try {
+      const response = await fetch(`${baseUrl}all`);
+      const data = await response.json();
+      const randomIndex = Math.floor(Math.random() * data.length);
+      setRandomCountry(data[randomIndex]);
+      setMessage('');
+      setHint('');
+      setInputValue('');
+      setGuess('');
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
   return (
     <div className="SearchCountriesContainer">
       <SearchTitle />
-      <ModeSelector mode={mode} setMode={setMode}/>
+      <ModeSelector mode={mode} setMode={setMode} />
       {mode === 'search' ? (
         <>
           <SearchForm
             filter={filter}
             setFilter={setFilter}
-            filterValue={filterValue}
-            setFilterValue={setFilterValue}
+            inputValue={inputValue}
+            setInputValue={setInputValue}
             sortOption={sortOption}
             setSortOption={setSortOption}
           />
           <CountryList countries={sortedCountries} />
         </>
       ) : randomCountry ? (
-        <GuessingForm country={randomCountry} fetchRandomCountry={fetchRandomCountry} />
+        <GuessingForm
+          country={randomCountry}
+          hint={hint}
+          setHint={setHint}
+          fetchRandomCountry={fetchRandomCountry}
+          message={message}
+          setMessage={setMessage}
+          guess={guess}
+          setGuess={setGuess}
+        />
       ) : (
         <p>Loading...</p>
       )}
