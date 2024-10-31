@@ -1,6 +1,8 @@
-import SelectFilter from './SelectFilter';
-import InputFormValue from './InputFormValue';
-import SelectSortBy from './SelectSortBy';
+import SelectFilter from "./SelectFilter";
+import InputFormValue from "./InputFormValue";
+import SelectSortBy from "./SelectSortBy";
+
+import "./SearchForm.css";
 
 type SearchFormProps = {
   filter: string;
@@ -11,21 +13,14 @@ type SearchFormProps = {
   setSortOption: (option: string) => void;
 };
 
-function SearchForm({
-  filter,
-  setFilter,
-  inputValue,
-  setInputValue,
-  sortOption,
-  setSortOption,
-}: SearchFormProps) {
+function SearchForm({ filter, setFilter, inputValue, setInputValue, sortOption, setSortOption }: SearchFormProps) {
   return (
-    <form className="flex flex-col items-center gap-2 flex items-end justify-center">
+    <form className='flex flex-col items-center gap-2 flex items-end justify-center'>
       <SelectFilter filter={filter} setFilter={setFilter} />
-      <InputFormValue inputValue={inputValue} setInputValue={setInputValue}/>
-      <SelectSortBy sortOption={sortOption} setSortOption={setSortOption}/>
+      <InputFormValue inputValue={inputValue} setInputValue={setInputValue} />
+      <SelectSortBy sortOption={sortOption} setSortOption={setSortOption} />
     </form>
   );
-} 
+}
 
 export default SearchForm;
